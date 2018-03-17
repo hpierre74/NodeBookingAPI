@@ -1,12 +1,22 @@
-const functions = require('firebase-functions');
-const BookingRouter = require('./api/Routes/BookingRoutes');
-const admin = require('firebase');
-admin.initializeApp(functions.config().firebase);
+const express = require('express');
+const mongoose = require('mongoose');
+// const BookingRouter = require('./api/Routes/BookingRoutes');
 const nodemailer = require('nodemailer');
 const Mail = require('./Services/Mail.js');
-const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const serverConfig = require('./config');
+
+// Set native promises as mongoose promise
+mongoose.Promise = global.Promise;
+
+// MongoDB Connection
+mongoose.connect(serverConfig.mongoURL, (error) => {
+  if (error) {
+    console.error('Please make sure Mongodb is installed and running!'); // eslint-disable-line no-console
+    throw error;
+  }
+});
 
 //Express App setup
 const app = express();
@@ -15,13 +25,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
 // Expose api routes 
-app.use('/api', BookingRouter);
+// app.use('/api', BookingRouter);
 
-exports.bookingAPI = functions.https.onRequest(app);
-
-exports.confirmBookingEmail = functions.database.ref('/bookings/{key}').onCreate((event) => {
-    return Mail.sendConfirmMail(event);
-  });
-
-
+app.listen(3000, () => console.log('Example app listening on port 3000!'))
 

@@ -6,12 +6,12 @@ const BookingRouter = new Router();
 BookingRouter.route('/bookings').get(BookingController.getBookings);
 
 // Get one Booking by cuid
-BookingRouter.route('/bookings/:id').get(BookingController.getBooking);
+BookingRouter.route('/bookings/:cuid').get(BookingController.getBooking);
 
 // Add a new Booking
 BookingRouter.route('/booking').post(BookingController.addBooking);
 
 // Delete a Booking by cuid
-BookingRouter.route('/bookings/:id').delete(BookingController.deleteBooking);
+BookingRouter.route('/bookings/:cuid').delete(BookingController.deleteBooking);
 
 module.exports = BookingRouter;

@@ -1,7 +1,8 @@
-const Schema = require('schema-js');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 
-const Booking = new Schema({
+const bookingSchema = new Schema({
     email: { type: String, required: true },
     tel: { type: String, required: true },
     date: { type: String, required: true },
@@ -10,8 +11,8 @@ const Booking = new Schema({
     service: { type: String, required: true },
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },
-    key: { type: String, required: true },
+    cuid: { type: String, required: true },
     persons: { type: String, required: true },
-    timestamp: { type: String, required: true }
+    timestamp: { type: Date, default: Date.now, required: true }
 })
-module.exports = Booking;
+module.exports = mongoose.model('Booking', bookingSchema);;

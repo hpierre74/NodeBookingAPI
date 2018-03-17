@@ -1,56 +1,58 @@
-const functions = require('firebase-functions');
-const Booking = require('../Models/Booking');
-const Firebase = require('../../Services/FirebaseAdmin');
-const admin = require('firebase');
+const Booking = require("../Models/Booking");
+const cuid = require("cuid");
 
 class BookingController {
+  static getBookings(req, res) {
+    Booking.find()
+      .sort("date")
+      .exec((err, bookings) => {
+        if (err) {
+          res.status(500).send(err);
+        }
+        res.json({ bookings });
+      });
+  }
+  static getBooking(req, res) {
+    Booking.findOne({ cuid: req.params.cuid }).exec((err, booking) => {
+      if (err) {
+        res.status(500).send(err);
+      }
+      res.json({ booking });
+    });
+  }
 
-    static getBookings(req, res) {
-        return admin.database().ref('bookings').once('value')
-        .then(snap => {
-            res.json( snap.val() );
-        })
-        .catch(error => {
-            res.status(500).send(error);
-        })
+  static addBooking(req, res) {
+    if (
+      !req.body.booking.firstname ||
+      !req.body.booking.lastname ||
+      !req.body.booking.tel ||
+      !req.body.booking.email ||
+      !req.body.booking.time ||
+      !req.body.booking.date ||
+      !req.body.booking.service ||
+      !req.body.booking.persons
+    ) {
+      res.status(403).end();
     }
-    static getBooking(req, res) {
-        if(req.params.id !== undefined) {
-            return admin.database().ref('bookings/'+ req.params.id).once('value')
-            .then(snap => {
-                res.json( snap.val() );
-            })
-            .catch(error => {
-                res.status(500).send(error);
-            })
-        }
-    }
-    static addBooking(req, res) {
-        if(Booking.validate(req.body)){
-            req.body.key = admin.database().ref('bookings').push().key;
-            return admin.database()
-            .ref('bookings/'+req.body.key)
-            .set(req.body)
-            .then((success => {
-                res.status(201).send('Booking added')
-            }))
-            .catch(error => {
-                res.status(403).send(error);
-            })
-        }
-    }
-    static deleteBooking(req, res) {
-        if(req.params.id !== undefined){
-            return admin.database()
-            .ref('bookings/'+req.params.id)
-            .remove()
-            .then((success => {
-                res.status(201).send('Booking deleted')
-            }))
-            .catch(error => {
-                res.status(403).send(error);
-            })
-        }
-    }
+    const newBooking = new Booking(req.body.booking);
+    newBooking.cuid = cuid();
+    newBooking.save((err, saved) => {
+      if (err) {
+        res.status(500).send(err);
+      }
+      res.json({ booking: saved });
+    });
+  }
+
+  static deleteBooking(req, res) {
+    Booking.findOne({ cuid: req.params.cuid }).exec((err, booking) => {
+        if (err) {
+          res.status(500).send(err);
+        }  
+        booking.remove(() => {
+          res.status(200).end();
+        });
+    });
+  }
 }
 module.exports = BookingController;
