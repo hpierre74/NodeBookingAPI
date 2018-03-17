@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-// const BookingRouter = require('./api/Routes/BookingRoutes');
+const BookingRouter = require('./api/Routes/BookingRoutes');
 const nodemailer = require('nodemailer');
 const Mail = require('./Services/Mail.js');
 const cors = require('cors');
