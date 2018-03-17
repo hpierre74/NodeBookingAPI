@@ -14,7 +14,7 @@ class Mail {
             }
         });
         const mailOptions = {
-            from: '"Mumbai Café" <mumbaicafelyon@gmail.com>',
+            from: '"Your Name" <yourmail@gmail.com>',
             bcc: email,
             subject: subject,
             text: text
