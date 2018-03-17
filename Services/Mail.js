@@ -9,8 +9,8 @@ class Mail {
             port: 465,
             private: true,
             auth: {
-                user: process.env.mailuser,
-                pass: process.env.mailpassword
+                user: process.env.GMAILUSER,
+                pass: process.env.GMAILPASSWORD
             }
         });
         const mailOptions = {

@@ -25,7 +25,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
 // Expose api routes 
-// app.use('/api', BookingRouter);
+app.use('/api', BookingRouter);
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
 
